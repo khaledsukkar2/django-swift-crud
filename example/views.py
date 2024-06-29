@@ -1,5 +1,5 @@
 # Create your views here.
-from simple_crud.views import BaseView
+from swift_crud.views import BaseView
 from .models import Employee
 from .forms import EmployeeForm
 

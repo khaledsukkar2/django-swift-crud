@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from simple_crud.mixins import(
+from swift_crud.mixins import(
     TemplateMixin,
     RedirectMixin,
     QuerysetMixin,

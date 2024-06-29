@@ -1,4 +1,4 @@
-from simple_crud.utils import generate_crud_urls
+from swift_crud.utils import generate_crud_urls
 from django.urls import path
 from .views import EmployeeView
 app_name = "example"
