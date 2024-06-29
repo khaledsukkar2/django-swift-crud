@@ -1,8 +1,8 @@
-# Corrected and Rewritten README.md for the Simple CRUD Django Package
+# DJANGO-SWIFT-CRUD Package
 
 ## Overview
 
-The `simple_crud` package provides a base view class (`BaseView`) and utility functions to quickly set up CRUD (Create, Read, Update, Delete) operations for any Django model with only one view class. This package aims to simplify the process by abstracting away the complexity of built-in Class-Based Views (CBVs) and the need to track the inheritance hierarchy to determine where to override methods.
+The `swift_crud` package provides a base view class (`BaseView`) and utility functions to quickly set up CRUD (Create, Read, Update, Delete) operations for any Django model with only one view class. This package aims to simplify the process by abstracting away the complexity of built-in Class-Based Views (CBVs) and the need to track the inheritance hierarchy to determine where to override methods.
 
 The package includes several mixins to handle common tasks, such as:
 
@@ -16,7 +16,7 @@ By utilizing these mixins, developers can easily implement CRUD functionality fo
 ## Installation
 
 ```
-pip install django-simple-crud
+pip install django-swift-crud
 ```
 
 ## Usage
@@ -40,7 +40,7 @@ pip install django-simple-crud
 2. **Define your views**:
 
    ```python
-   from simple_crud.views import BaseView
+   from swift_crud.views import BaseView
    from .models import Employee
    from .forms import EmployeeForm  # You need to create this form
 
@@ -70,7 +70,7 @@ pip install django-simple-crud
    ]
    ```
 
-   Alternatively, you can use the `generate_crud_urls` function from the `simple_crud.utils` module:
+   Alternatively, you can use the `generate_crud_urls` function from the `swift_crud.utils` module:
 
    ```python
    from simple_crud.utils import generate_crud_urls
