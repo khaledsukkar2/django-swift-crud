@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Detail</title>
+</head>
+<body>
+    <h1>{{ employee.name }}</h1>
+    <p>FirstName: {{ employee.first_name }}</p>
+    <p>LastName: {{ employee.last_name }}</p>
+    <p>Bio: {{ employee.bio }}</p>
+    <a href="{% url 'example:employee_update' employee.pk %}">Edit</a>
+    <a href="{% url 'example:employee_delete' employee.pk %}">Delete</a>
+    <a href="{% url 'example:employee_list' %}">Back to List</a>
+</body>
+</html>
