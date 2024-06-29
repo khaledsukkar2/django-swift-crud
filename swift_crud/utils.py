@@ -10,27 +10,37 @@ def generate_crud_urls(view, custom_patterns=None):
 
     Returns:
         list: A list of URL patterns.
+    
+    Raises:
+        ValueError: If the model attribute is not provided in the view.
     """
-    try:
-        model_name = view.model._meta.model_name
-    except:
-        raise ValueError("the model attribute is empty, please provide a valid model")
-    # Default URL patterns
+    # Ensure the view has a model attribute
+    if not hasattr(view, 'model') or view.model is None:
+        raise ValueError("The model attribute is empty, please provide a valid model")
+
+    # Get the model name from the view
+    model_name = view.model._meta.model_name
+    
+    # Prepare the view instance to avoid multiple calls to view.as_view()
+    view_instance = view.as_view()
+
+    # Default URL patterns for CRUD operations
     default_patterns = {
-        'list': ('', view.as_view(), f'{model_name}_list'),
-        'add': ('create/', view.as_view(), f'{model_name}_create'),
-        'detail': ('<int:pk>/', view.as_view(), f'{model_name}_detail'),
-        'update': ('<int:pk>/update/', view.as_view(), f'{model_name}_update'),
-        'delete': ('<int:pk>/delete/', view.as_view(), f'{model_name}_delete'),
+        'list': ('', view_instance, f'{model_name}_list'),          # URL pattern for listing objects
+        'add': ('create/', view_instance, f'{model_name}_create'),  # URL pattern for creating a new object
+        'detail': ('<int:pk>/', view_instance, f'{model_name}_detail'),  # URL pattern for viewing object details
+        'update': ('<int:pk>/update/', view_instance, f'{model_name}_update'),  # URL pattern for updating an object
+        'delete': ('<int:pk>/delete/', view_instance, f'{model_name}_delete'),  # URL pattern for deleting an object
     }
 
     # Override default patterns with custom patterns if provided
     if custom_patterns:
         default_patterns.update(custom_patterns)
 
+    # Generate URL patterns by iterating over the default (or custom) patterns
     urlpatterns = [
-        path(f'{pattern}', view, name=name)
-        for key, (pattern, view, name) in default_patterns.items()
+        path(pattern, view_instance, name=name)  # Create a path for each pattern
+        for pattern, view_instance, name in default_patterns.values()
     ]
 
-    return urlpatterns
+    return urlpatterns  # Return the list of URL patterns
