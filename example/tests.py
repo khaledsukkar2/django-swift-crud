@@ -6,7 +6,6 @@ from example.views import EmployeeView
 from example.forms import EmployeeForm
 
 
-
 class EmployeeViewTests(TestCase):
     
     def setUp(self):
