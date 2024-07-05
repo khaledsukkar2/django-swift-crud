@@ -1,7 +1,11 @@
-from swift_crud.utils import generate_crud_urls
 from django.urls import path
-from .views import EmployeeView
+
+from example.views import EmployeeView
+from swift_crud.utils import generate_crud_urls
+
+
 app_name = "example"
+
 urlpatterns = [
     # path('', EmployeeView.as_view(), name="employee_list"),
     # path('create/', EmployeeView.as_view(), name="employee_create"),
