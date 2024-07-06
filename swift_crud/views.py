@@ -144,32 +144,54 @@ class BaseView(View, TemplateMixin, RedirectMixin, QuerysetMixin, FormMixin):
             **kwargs: Additional keyword arguments.
 
         Returns:
-            function: The view method to handle the request.
+            callable: The view method to handle the request.
         """
-        method = request.method.lower()
-        path = request.path
 
-        if method == 'get':
-            if 'update' in path:
-                return self.update_view
-            elif 'create' in path:
-                return self.create_view
-            elif self.pk_url_kwarg in kwargs:
-                return self.detail_view
-            return self.list_view
+        # to detect view_method from path faster, we split path
+        # ex: /employees/9/update/ -> after .split("/"): ['', 'employees', '9', 'update', '']
+        # then we slice the path_sections[1:-1], result: ['employees', '9', 'update']
+        # then we check the path_sections[-1]
 
-        if method == 'post':
-            if 'create' in path:
-                return self.create_view
-            elif 'update' in path:
-                return self.update_view
-            elif 'delete' in path:
-                return self.delete_view
+        # more examples on multiple methods:
+        # /employees/9/delete/ -> .split("/"): ['employees', '9', 'delete'], path_sections[-1] will be 'delete'
+        # /employees/9/create/ -> .split("/"): ['employees', '9', 'create'], path_sections[-1] will be 'create'
+        # /employees/9/ -> .split("/"): ['employees', '9'], path_sections[-1] will be '9'
+        # /employees/ -> .split("/"): ['employees'], path_sections[-1] will be 'employees'
 
-        if method == 'put' and 'update' in path:
+        # list and get view_method_detector:
+        # 1] get:
+        # as we say: /employees/9/ -> .split("/"): ['employees', '9'], path_sections[-1] will be '9'
+        # so we get the str() version of the pk
+        # 2] list:
+        # as we say: /employees/9/ -> .split("/"): ['employees', '9'], path_sections[-1] will be 'employees'
+        # so we just check if there is no method to detect, and thus path_sections[0] == path_sections[1]
+
+        method: str = request.method.lower()
+        path: str = request.path 
+        path_sections: list[str] = path.split("/")
+        path_sections: list[str] = path_sections[1:-1]
+
+        view_method_router = {
+            "create": self.create_view,
+            "update": self.update_view,
+            "delete": self.delete_view,
+            str(kwargs.get(self.pk_url_kwarg)): self.detail_view,
+            path_sections[0]: self.list_view
+        }
+
+        if method == 'get' or method == "post":
+            try:
+                view_method = view_method_router.get(path_sections[-1])
+                print(f"{method} -> {view_method.__name__}")
+                return view_method
+            except Exception as e:
+                raise e
+
+        # note: maybe we need patch, not just put (for ajax)
+        if method == 'put' and 'update' == path[-1]:
             return self.update_view
 
-        if method == 'delete' and 'delete' in path:
+        if method == 'delete' and 'delete' == path[-1]:
             return self.delete_view
 
         return None
