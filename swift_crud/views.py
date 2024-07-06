@@ -2,19 +2,19 @@ from django.shortcuts import render, redirect
 from django.views import View
 from swift_crud.mixins import TemplateMixin, RedirectMixin, QuerysetMixin, FormMixin
 
-class BaseView(View, TemplateMixin, RedirectMixin, QuerysetMixin, FormMixin):
+class SwiftView(View, TemplateMixin, RedirectMixin, QuerysetMixin, FormMixin):
     """
-    BaseView class that provides basic CRUD operations for a Django model.
+    SwiftView class that provides basic CRUD operations for a Django model.
     It extends Django's View class and includes several mixins for additional functionalities.
 
     Attributes:
         model (django.db.models.Model): The model associated with this view.
-        single_object_name (str): The context variable name for a single object.
-        plural_object_name (str): The context variable name for a queryset of objects.
+        verbose_name (str): The context variable name for a single object.
+        verbose_name_plural (str): The context variable name for a queryset of objects.
     """
     model = None
-    single_object_name = None
-    plural_object_name = None
+    verbose_name = None
+    verbose_name_plural = None
 
     def get_model(self):
         """
@@ -27,23 +27,23 @@ class BaseView(View, TemplateMixin, RedirectMixin, QuerysetMixin, FormMixin):
             return self.model
         raise ValueError("You must provide the model property.")
 
-    def get_single_object_name(self):
+    def get_verbose_name(self):
         """
         Returns the context variable name for a single object.
 
         Returns:
             str: The context variable name for a single object.
         """
-        return self.single_object_name or self.get_model()._meta.verbose_name
+        return self.verbose_name or self.get_model()._meta.verbose_name
 
-    def get_plural_object_name(self):
+    def get_verbose_name_plural(self):
         """
         Returns the context variable name for a queryset of objects.
 
         Returns:
             str: The context variable name for a queryset of objects.
         """
-        return self.plural_object_name or self.get_model()._meta.verbose_name_plural
+        return self.verbose_name_plural or self.get_model()._meta.verbose_name_plural
 
     def list_view(self, request, *args, **kwargs):
         """
@@ -60,7 +60,7 @@ class BaseView(View, TemplateMixin, RedirectMixin, QuerysetMixin, FormMixin):
         queryset = self.get_queryset(request, *args, **kwargs)
         if self.paginate_by is not None:
             queryset = self.get_paginated_query(request, *args, **kwargs)
-        return render(request, self.get_template_name('list'), {self.get_plural_object_name(): queryset})
+        return render(request, self.get_template_name('list'), {self.get_verbose_name_plural(): queryset})
 
     def detail_view(self, request, *args, **kwargs):
         """
@@ -75,7 +75,7 @@ class BaseView(View, TemplateMixin, RedirectMixin, QuerysetMixin, FormMixin):
             HttpResponse: Rendered HTML page with the details of a single model object.
         """
         obj = self.get_object(request, *args, **kwargs)
-        return render(request, self.get_template_name('detail'), {self.get_single_object_name(): obj})
+        return render(request, self.get_template_name('detail'), {self.get_verbose_name(): obj})
 
     def delete_view(self, request, *args, **kwargs):
         """
@@ -132,7 +132,7 @@ class BaseView(View, TemplateMixin, RedirectMixin, QuerysetMixin, FormMixin):
         if request.method == 'POST' and form.is_valid():
             self.form_valid(form)
             return redirect(self.get_redirect_url())
-        return render(request, self.get_template_name('update'), {'form': form, self.get_single_object_name(): obj})
+        return render(request, self.get_template_name('update'), {'form': form, self.get_verbose_name(): obj})
 
     def get_view_method(self, request, *args, **kwargs):
         """
@@ -182,7 +182,6 @@ class BaseView(View, TemplateMixin, RedirectMixin, QuerysetMixin, FormMixin):
         if method == 'get' or method == "post":
             try:
                 view_method = view_method_router.get(path_sections[-1])
-                print(f"{method} -> {view_method.__name__}")
                 return view_method
             except Exception as e:
                 raise e

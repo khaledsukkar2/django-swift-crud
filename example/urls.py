@@ -1,5 +1,4 @@
-from django.urls import path
-
+from django.urls import path, include
 from example.views import EmployeeView
 from swift_crud.utils import generate_crud_urls
 
@@ -12,6 +11,6 @@ urlpatterns = [
     # path('update/<int:pk>/', EmployeeView.as_view(), name="employee_update"),
     # path('<int:pk>/', EmployeeView.as_view(), name="employee_detail"),
     # path('delete/<int:pk>/', EmployeeView.as_view(), name="employee_delete")
+    path('', include(generate_crud_urls(EmployeeView)))
 ]
 
-urlpatterns.extend(generate_crud_urls(EmployeeView))

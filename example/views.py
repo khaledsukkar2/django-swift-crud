@@ -1,12 +1,12 @@
 # Create your views here.
-from swift_crud.views import BaseView
+from swift_crud.views import SwiftView
 from .models import Employee
 from .forms import EmployeeForm
 
-class EmployeeView(BaseView):
+class EmployeeView(SwiftView):
     model = Employee
     form_class = EmployeeForm
-    single_object_name = 'employee'
-    plural_object_name = 'employees'
+    verbose_name = 'employee'
+    verbose_name_plural = 'employees'
     template_folder = 'employee'
     redirect_url = 'example:employee_list'

@@ -33,7 +33,7 @@ class TemplateMixin:
             raise ValueError("You must provide either the template_folder or custom_templates attribute.")
 
         # Determine the template name based on custom_templates or template_folder
-        template_name = self.custom_templates.get(prefix, f'{self.template_folder}/{self.get_single_object_name()}_{prefix}.html')
+        template_name = self.custom_templates.get(prefix, f'{self.template_folder}/{self.get_verbose_name()}_{prefix}.html')
         
         try:
             # Check if the template exists

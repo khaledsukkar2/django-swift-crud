@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `swift_crud` package provides a base view class (`BaseView`) and utility functions to quickly set up CRUD (Create, Read, Update, Delete) operations for any Django model with only one view class. This package aims to simplify the process by abstracting away the complexity of built-in Class-Based Views (CBVs) and the need to track the inheritance hierarchy to determine where to override methods.
+The `swift_crud` package provides a base view class (`SwiftView`) and utility functions to quickly set up CRUD (Create, Read, Update, Delete) operations for any Django model with only one view class. This package aims to simplify the process by abstracting away the complexity of built-in Class-Based Views (CBVs) and the need to track the inheritance hierarchy to determine where to override methods.
 
 The package includes several mixins to handle common tasks, such as:
 
@@ -40,15 +40,15 @@ pip install django-swift-crud
 2. **Define your views**:
 
    ```python
-   from swift_crud.views import BaseView
+   from swift_crud.views import SwiftView
    from .models import Employee
    from .forms import EmployeeForm  # You need to create this form
 
-   class EmployeeView(BaseView):
+   class EmployeeView(SwiftView):
        model = Employee
        form_class = EmployeeForm
-       single_object_name = 'employee'
-       plural_object_name = 'employees'
+       verbose_name = 'employee'
+       verbose_name_plural = 'employees'
        template_folder = 'employees'
        redirect_url = '/employees/'
    ```
@@ -73,25 +73,28 @@ pip install django-swift-crud
    Alternatively, you can use the `generate_crud_urls` function from the `swift_crud.utils` module:
 
    ```python
-   from swift_crud.utils import generate_crud_urls
+   from django.urls import path, include
    from .views import EmployeeView
+   from swift_crud.utils import generate_crud_urls
 
-   urlpatterns.extend(generate_crud_urls(EmployeeView))
+   urlpatterns = [
+    path('', include(generate_crud_urls(EmployeeView)))
+    ]
    ```
 
    You can also add custom URL patterns by passing the `custom_patterns` parameter to `generate_crud_urls`.
 
-## Create Your Own `BaseView`
+## Create Your Own `SwiftView`
 
-You can customize the `BaseView` class if you want to add more features or Mixin classes, such as the `LoginRequiredMixin`, and reuse your custom `BaseView` class.
+You can customize the `SwiftView` class if you want to add more features or Mixin classes, such as the `LoginRequiredMixin`, and reuse your custom `SwiftView` class.
 
 ## Attributes
 
-The `BaseView` class supports the following attributes:
+The `SwiftView` class supports the following attributes:
 
 - `model`: The model associated with this view. If not provided, the `get_model` method will raise a `ValueError`.
-- `single_object_name` (Optional): The context variable name for a single object. If not provided, it defaults to the model's verbose name.
-- `plural_object_name` (Optional): The context variable name for a queryset of objects. If not provided, it defaults to the model's verbose name plural.
+- `verbose_name` (Optional): The context variable name for a single object. If not provided, it defaults to the model's verbose name.
+- `verbose_name_plural` (Optional): The context variable name for a queryset of objects. If not provided, it defaults to the model's verbose name plural.
 - `template_folder`: Path to the folder of your templates.
 - `custom_templates` (Optional): A dictionary to provide custom template paths.
 - `redirect_url`: The URL to redirect to.
