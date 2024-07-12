@@ -51,6 +51,7 @@ pip install django-swift-crud
        verbose_name_plural = 'employees'
        template_folder = 'employees'
        redirect_url = '/employees/'
+       allowed_views = ["list", "detail", "delete", "create", "update"]
    ```
 
 3. **URL Configuration**:

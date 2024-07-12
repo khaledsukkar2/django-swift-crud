@@ -1,6 +1,9 @@
-from django.shortcuts import render, redirect
 from django.views import View
+from django.shortcuts import render, redirect
+from django.core.exceptions import ViewDoesNotExist
+
 from swift_crud.mixins import TemplateMixin, RedirectMixin, QuerysetMixin, FormMixin
+
 
 class SwiftView(View, TemplateMixin, RedirectMixin, QuerysetMixin, FormMixin):
     """
@@ -15,6 +18,9 @@ class SwiftView(View, TemplateMixin, RedirectMixin, QuerysetMixin, FormMixin):
     model = None
     verbose_name = None
     verbose_name_plural = None
+
+    # add new class attr
+    allowed_views = ["detail", "list", "update", "create", "delete"]
 
     def get_model(self):
         """
@@ -134,6 +140,43 @@ class SwiftView(View, TemplateMixin, RedirectMixin, QuerysetMixin, FormMixin):
             return redirect(self.get_redirect_url())
         return render(request, self.get_template_name('update'), {'form': form, self.get_verbose_name(): obj})
 
+    def _allowed_views(self) -> set[str]:
+        """
+        Check allowed_methods by verifying these conditions:
+        1] Standardize allowed_methods names to lowercase.
+        2] Remove redundant view_methods names from allowed_methods.
+        3] Filter out any strange or weird view_method names.
+
+        Args:
+
+        Returns:
+            set of strings: the allowed view_methods names
+        """
+        # 1] initialize a set to guarantee non-redundent views (maybe user put 'list' twice)
+        clear_views = set()
+
+        # 2] compare between original views and user inputed views
+        # we choose set to compare faster
+        acceptable_views = {"detail", "list", "update", "create", "delete"}
+        
+        # 3] loop through each inputed view, then lower() it
+        for view in self.allowed_views:
+            view = view.lower()
+
+            # 3.1] if view doesn't appear in acceptable views set, raise a ValidatonError
+            if view not in acceptable_views:
+                raise TypeError(
+                    "%s is not a valid view name, Please ensure there are no spelling errors. "
+                    "Allowed method names are: detail, list, update, create and delete" % view
+                )
+            
+            # 3.2] if view in acceptable views, add it our clear_views set
+            else:
+                clear_views.add(view)
+        
+        # 4] return the final result
+        return clear_views
+
     def get_view_method(self, request, *args, **kwargs):
         """
         Determines the appropriate view method to handle the request based on the HTTP method and URL path.
@@ -166,8 +209,11 @@ class SwiftView(View, TemplateMixin, RedirectMixin, QuerysetMixin, FormMixin):
         # as we say: /employees/9/ -> .split("/"): ['employees', '9'], path_sections[-1] will be 'employees'
         # so we just check if there is no method to detect, and thus path_sections[0] == path_sections[1]
 
+        # 1] first we get the http method from the request
         method: str = request.method.lower()
-        path: str = request.path 
+
+        # 2] then working with path to get view_method name
+        path: str = request.path
         path_sections: list[str] = path.split("/")
         path_sections: list[str] = path_sections[1:-1]
 
@@ -182,6 +228,25 @@ class SwiftView(View, TemplateMixin, RedirectMixin, QuerysetMixin, FormMixin):
         if method == 'get' or method == "post":
             try:
                 view_method = view_method_router.get(path_sections[-1])
+                
+                # here we get the view_method name from the result of view_method_router
+                # if the path_section[-1] is 'create' then the view_method will be self.create_view
+                # here we take the name only (create_view in this example)
+                # then splitting by '_'
+                view_method_name = view_method.__name__.split("_")
+                view_method_name = view_method_name[0]
+                
+                # 3] then we have to check if the view_method_name available in allowed_views list
+                allowed_views = self._allowed_views()
+                
+                # 3.1] if it isn't in allowed views we raise validation error 
+                if view_method_name not in allowed_views:
+                    raise ViewDoesNotExist(
+                        "you can't use %s view, the %s view isn't in allowed_views, "
+                        "please double check the allowed_views list" % (view_method_name, view_method_name)
+                    )
+                
+                # 3.2] else we return the view_method normally
                 return view_method
             except Exception as e:
                 raise e
