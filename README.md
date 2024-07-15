@@ -1,5 +1,8 @@
 # DJANGO-SWIFT-CRUD Package
 
+## Motiviation
+Creating CRUD operations for Django models can often be a tedious, especially when dealing with the complexities of Class-Based Views. With the swift_crud package, we provide a streamlined solution that eliminates the need to navigate through inheritance hierarchies and override methods. Our goal is to empower developers to quickly and efficiently set up CRUD operations for any Django model with just one view class, saving valuable time and ensuring a smoother development process. Let swift_crud simplify your workflow and enhance your productivity.
+
 ## Overview
 
 The `swift_crud` package provides a base view class (`SwiftView`) and utility functions to quickly set up CRUD (Create, Read, Update, Delete) operations for any Django model with only one view class. This package aims to simplify the process by abstracting away the complexity of built-in Class-Based Views (CBVs) and the need to track the inheritance hierarchy to determine where to override methods.
@@ -51,6 +54,7 @@ pip install django-swift-crud
        verbose_name_plural = 'employees'
        template_folder = 'employees'
        redirect_url = '/employees/'
+       allowed_views = ["list", "detail", "delete", "create", "update"]
    ```
 
 3. **URL Configuration**:

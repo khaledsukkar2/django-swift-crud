@@ -10,3 +10,4 @@ class EmployeeView(SwiftView):
     verbose_name_plural = 'employees'
     template_folder = 'employee'
     redirect_url = 'example:employee_list'
+    allowed_views = ["list", "detail", "update", "create", "delete"]
