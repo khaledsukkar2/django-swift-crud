@@ -37,7 +37,7 @@ setup(
     author_email='khaled.sukkar.contact@gmail.com',
 
     # License under which the package is released
-    license='BSD',
+    license='MIT',
 
     # Platforms that the package can run on
     platforms='any',
@@ -54,7 +54,7 @@ setup(
         'Framework :: Django :: 3.2',
         'Framework :: Django :: 4.0',
         'Intended Audience :: Developers',  # Intended audience for the package
-        'License :: OSI Approved :: BSD License',  # License type
+        'License :: OSI Approved :: MIT License',  # License type
         'Natural Language :: English',  # Language of the package
         'Operating System :: OS Independent',  # OS compatibility
         'Programming Language :: Python',  # Programming language used
