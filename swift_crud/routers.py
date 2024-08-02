@@ -6,7 +6,7 @@ applications which utilizing the SwiftCrud lib.
 Contribute Points:
 - also it needs urls cache, so it doesn't load the routers from the start every time
 - It doesn't support Regular Expression
-- also it doesn't support @action decorater
+- also it doesn't support @action decorater (like DRF @action)
 
 Usage example:
 from swift_crud.routers import DefaultRouter
