@@ -216,13 +216,13 @@ class SwiftView(View, TemplateMixin, RedirectMixin, QuerysetMixin, FormMixin):
         path: str = request.path
         path_sections: list[str] = path.split("/")
         path_sections: list[str] = path_sections[1:-1]
-
+        
         view_method_router = {
+            "list": self.list_view,
             "create": self.create_view,
             "update": self.update_view,
             "delete": self.delete_view,
-            str(kwargs.get(self.pk_url_kwarg)): self.detail_view,
-            path_sections[0]: self.list_view
+            str(kwargs.get(self.pk_url_kwarg)): self.detail_view
         }
 
         if method == 'get' or method == "post":
