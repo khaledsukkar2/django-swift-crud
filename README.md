@@ -115,6 +115,7 @@ The `SwiftView` class supports the following attributes:
 - `queryset` (Optional): The queryset to use. If not provided, `self.model.objects.all()` will be the query.
 - `pk_url_kwarg` (Optional): The URL keyword argument for the primary key.
 - `paginate_by` (Optional): Number of items per page for pagination.
+- `allowed_views` (Optional): The view methods you want the view to work with. The default is all existing methods.
 
 ## Contributing
 
