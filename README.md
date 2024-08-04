@@ -110,6 +110,11 @@ The `SwiftView` class supports the following attributes:
 
 If you find any bugs or have feature requests, please open an issue on GitHub. Contributions are welcome!
 
+Now we are working on four main features that need some contribution:
+- Support AJAX requests inside the package
+- Urls cache mechanism to use when working with routers (only)
+- Also, we need some help with regular expression for routers module (note: this is good resource to start from [Regular Expression with python tutorial](https://www.youtube.com/watch?v=AEE9ecgLgdQ&list=WL&index=157&pp=gAQBiAQB) )
+
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.

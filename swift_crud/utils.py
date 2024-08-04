@@ -1,6 +1,9 @@
 from django.urls import path
 
-def generate_crud_urls(view, custom_patterns=None):
+from swift_crud.views import SwiftView
+
+
+def generate_crud_urls(view: SwiftView, custom_patterns=None):
     """
     Generate CRUD URL patterns for a given view and model.
 
