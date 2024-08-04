@@ -9,7 +9,7 @@ setup(
     name='django-swift-crud',
 
     # Version of this release
-    version='0.1.2',
+    version='0.1.3',
 
     # Automatically find all packages in the current directory
     packages=find_packages(),
