@@ -1,6 +1,7 @@
 # DJANGO-SWIFT-CRUD Package
 
 ## Motiviation
+
 Creating CRUD operations for Django models can often be a tedious, especially when dealing with the complexities of Class-Based Views. With the swift_crud package, we provide a streamlined solution that eliminates the need to navigate through inheritance hierarchies and override methods. Our goal is to empower developers to quickly and efficiently set up CRUD operations for any Django model with just one view class, saving valuable time and ensuring a smoother development process. Let swift_crud simplify your workflow and enhance your productivity.
 
 ## Overview
@@ -76,8 +77,8 @@ pip install django-swift-crud
 
    Alternatively, you can use the `DefaultRouter` class from the `swift_crud.routers` module inspired from DRF:
 
-   ```python
-   
+```python
+
 from example.views import EmployeeView
 from swift_crud.utils import generate_crud_urls
 from swift_crud.routers import DefaultRouter
@@ -90,13 +91,13 @@ router.register("Employee/", EmployeeView, "Employee")
 
 
 urlpatterns = [
-   
+
 ]
 
 urlpatterns += router.urls
-   ```
+```
 
-   And of course, uou can customize the Router to fit your use case. 
+And of course, uou can customize the Router to fit your use case.
 
 ## Create Your Own `SwiftView`
 
@@ -122,6 +123,7 @@ The `SwiftView` class supports the following attributes:
 If you find any bugs or have feature requests, please open an issue on GitHub. Contributions are welcome!
 
 Now we are working on four main features that need some contribution:
+
 - Support AJAX requests inside the package
 - Urls cache mechanism to use when working with routers (only)
 - Also, we need some help with regular expression for routers module (note: this is good resource to start from [Regular Expression with python tutorial](https://www.youtube.com/watch?v=AEE9ecgLgdQ&list=WL&index=157&pp=gAQBiAQB) )
