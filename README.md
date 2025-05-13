@@ -97,7 +97,7 @@ pip install django-swift-crud
    urlpatterns += router.urls
    ```
 
-   And of course, uou can customize the Router to fit your use case.
+   And of course, you can customize the Router to fit your use case.
 
 ## Create Your Own `SwiftView`
 
