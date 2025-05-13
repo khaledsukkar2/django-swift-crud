@@ -77,27 +77,27 @@ pip install django-swift-crud
 
    Alternatively, you can use the `DefaultRouter` class from the `swift_crud.routers` module inspired from DRF:
 
-```python
+   ```python
+   
+   from example.views import EmployeeView
+   from swift_crud.utils import generate_crud_urls
+   from swift_crud.routers import DefaultRouter
+   
+   
+   app_name = "example"
+   
+   router = DefaultRouter()
+   router.register("Employee/", EmployeeView, "Employee")
+   
+   
+   urlpatterns = [
+   
+   ]
+   
+   urlpatterns += router.urls
+   ```
 
-from example.views import EmployeeView
-from swift_crud.utils import generate_crud_urls
-from swift_crud.routers import DefaultRouter
-
-
-app_name = "example"
-
-router = DefaultRouter()
-router.register("Employee/", EmployeeView, "Employee")
-
-
-urlpatterns = [
-
-]
-
-urlpatterns += router.urls
-```
-
-And of course, uou can customize the Router to fit your use case.
+   And of course, uou can customize the Router to fit your use case.
 
 ## Create Your Own `SwiftView`
 
